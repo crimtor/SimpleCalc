@@ -155,13 +155,13 @@ export default class Calculator extends React.Component {
     </div>
     <div className="col-md-4">
       <div className="row">
-        <div className="title"><h4>React Calculator</h4></div>
+        <div className="title"><h4>A Simple React Calc</h4></div>
       </div>
       <div className="row">
         <div id="display"> {displayValue} </div>
       </div>
       <div className="row">
-        <CalcKey onClick={() => this.clearDisplay()} label="AC" className="btn-danger" id="clear" />
+        <CalcKey onClick={() => this.clearDisplay()} label="AC" id="clear" />
         <CalcKey onClick={() => this.toggleNegativeNum()} label="±" id="negative" />
         <CalcKey onClick={() => this.inputCalcOperator(C_PER)} label="%" id="percent" />
         <CalcKey onClick={() => this.inputCalcOperator(C_DIV)} label="÷" id="divide" />
@@ -182,10 +182,10 @@ export default class Calculator extends React.Component {
         <CalcKey onClick={() => this.inputDigit("1")} label="1" id="one" />
         <CalcKey onClick={() => this.inputDigit("2")} label="2" id="two" />
         <CalcKey onClick={() => this.inputDigit("3")} label="3" id="three" />
-        <CalcKey onClick={() => this.inputCalcOperator(C_PLUS)} className="btn-warning" label="+" id="add" />
+        <CalcKey onClick={() => this.inputCalcOperator(C_PLUS)} label="+" id="add" />
       </div>
       <div className="row">
-        <CalcKey onClick={() => this.inputDigit("0")} className="zero" label="0" id="zero" />
+        <CalcKey onClick={() => this.inputDigit("0")} label="0" id="zero" />
         <CalcKey onClick={() => this.inputDot()} label="." id="decimal" />
         <CalcKey onClick={() => this.inputCalcOperator(C_EQUAL)} label="=" id="equals" />
       </div>

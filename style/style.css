@@ -1,18 +1,38 @@
+body {
+  background: #642B73;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #C6426E, #642B73);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #C6426E, #642B73); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
 button {
   width:3em;
   height:3em;
   text-align: center;
   margin: .25em !important;
 }
-
-button.zero {
-  width:6.5em;
+.title h4{
+  font-weight: bolder !important;
 }
-
 .row {
   padding-bottom: 0.5em;
 }
 
+#clear {
+  background-color: red;
+}
+
+#zero {
+  background-color: steelblue;
+  width:6.5em;
+}
+
+#equals {
+  background-color: green;
+}
+
+#add {
+  background-color: orange;
+}
 
 #display {
   width: 7em;
@@ -36,5 +56,5 @@ input {
   width: 100%;
   height: 40px;
   background-color: transparent;
-  padding-top: 3em;
+  padding-top: 1.5em;
 }
