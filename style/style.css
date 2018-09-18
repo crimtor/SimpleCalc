@@ -14,13 +14,14 @@ button.zero {
 }
 
 
-.display {
+#display {
   width: 7em;
   height: 3em;
   padding: 1em 0 0;
   font-size: 2em;
   color: black;
   margin: 0;
+  background-color: lightgrey;
 }
 
 input {

@@ -18,6 +18,7 @@ const INITIAL_STATE = {
   firstValue: null,
   operator: null,
   calcEntered: false,
+  lastButtonClicked: null
 };
 
 
@@ -28,21 +29,23 @@ export default class Calculator extends React.Component {
   }
 
   inputDigit(digit) {
-    const  { displayValue, calcEntered } = this.state;
+    const  { displayValue, calcEntered, lastButtonClicked } = this.state;
     const nextDisplayValue = (calcEntered || displayValue === "0") ? digit : (displayValue + digit);
     this.setState({
       displayValue: nextDisplayValue,
-      calcEntered: false
+      calcEntered: false,
+      lastButtonClicked: digit
     });
   }
 
   inputDot() {
-    const  { displayValue, calcEntered } = this.state;
+    const  { displayValue, calcEntered, lastButtonClicked } = this.state;
     if (displayValue.indexOf(DOT_CHAR) === -1) {
       const nextDisplayValue = calcEntered ? "0" + DOT_CHAR : (displayValue + DOT_CHAR);
       this.setState({
         displayValue: nextDisplayValue,
-        calcEntered: false
+        calcEntered: false,
+        lastButtonClicked: DOT_CHAR
       });
     }
   }
@@ -73,7 +76,8 @@ export default class Calculator extends React.Component {
       firstValue,
       secondValue,
       operator,
-      calcEntered
+      calcEntered,
+      lastButtonClicked
     } = this.state;
 
     const execOperator = {
@@ -82,7 +86,7 @@ export default class Calculator extends React.Component {
       [C_MINUS]: (firstValue, secondValue) => firstValue - secondValue,
       [C_PLUS]: (firstValue, secondValue) => firstValue + secondValue,
       [C_PER]: (firstValue, secondValue) => firstValue * secondValue / 100,
-      [C_EQUAL]: (firstValue, secondValue) => secondValue,
+      [C_EQUAL]: (firstValue, secondValue) => secondValue
     };
 
     let nextDisplayValue = displayValue;
@@ -90,34 +94,54 @@ export default class Calculator extends React.Component {
 
     if (!operator) {
       // no previous operator was set
-      // same display value which will be the first operand
+      // display same value which will be the first value
+      this.setState({
+        displayValue: nextDisplayValue,
+        firstValue: currentValue,
+        operator: calcOperator,
+        calcEntered: true,
+        lastButtonClicked: calcOperator
+      });
 
     } else {
 
       // there was already an operator set
-      // the current display value is the second operand
+      // the current display value is the second value
       // execute the operator, the result is the next display value
       // and it is also the future first operand of the next operator
+      if(lastButtonClicked === C_MULT || lastButtonClicked === C_MINUS ||
+        lastButtonClicked === C_PLUS || lastButtonClicked === C_DIV){
 
-      if (calcOperator === C_PER) {
-        const percentage = execOperator[calcOperator](firstValue, currentValue);
-        // it will be the second operand
-        nextDisplayValue = String(percentage);
-        // reset operation and first operand
-        calcOperator = operator;
-        currentValue = firstValue;
-      } else {
-        currentValue = execOperator[operator](firstValue, currentValue);
-        nextDisplayValue = String(currentValue);
+          this.setState({
+            operator: calcOperator,
+            calcEntered: true,
+            lastButtonClicked: calcOperator
+          });
+
+      }else{
+          if (calcOperator === C_PER) {
+            const percentage = execOperator[calcOperator](firstValue, currentValue);
+            // it will be the second operand
+            nextDisplayValue = String(percentage);
+            // reset operation and first operand
+            calcOperator = operator;
+            currentValue = firstValue;
+        } else if (calcOperator === C_EQUAL || lastButtonClicked != C_MULT ||
+        lastButtonClicked != C_MINUS || lastButtonClicked != C_PLUS || lastButtonClicked != C_DIV) {
+            currentValue = execOperator[operator](firstValue, currentValue);
+            nextDisplayValue = String(currentValue);
+        }else{
+
+        }
+        this.setState({
+          displayValue: nextDisplayValue,
+          firstValue: currentValue,
+          operator: calcOperator,
+          calcEntered: true,
+          lastButtonClicked: calcOperator
+        });
       }
     }
-
-    this.setState({
-      displayValue: nextDisplayValue,
-      firstValue: currentValue,
-      operator: calcOperator,
-      calcEntered: true
-    });
 
   }
 
@@ -134,16 +158,7 @@ export default class Calculator extends React.Component {
         <div className="title"><h4>React Calculator</h4></div>
       </div>
       <div className="row">
-        <div className="display">
-        <input
-          id="display"
-          type="text"
-          className="form-control"
-          disabled
-          placeholder={displayValue}
-          title={displayValue}
-        />
-        </div>
+        <div id="display"> {displayValue} </div>
       </div>
       <div className="row">
         <CalcKey onClick={() => this.clearDisplay()} label="AC" className="btn-danger" id="clear" />
@@ -184,24 +199,3 @@ export default class Calculator extends React.Component {
     )
   }
 }
-
-
-// function mapStateToProps(state) {
-//   // Whatever is returned will show up as props
-//   // inside of BookList
-//   return {
-//     books: state.books
-//   };
-// }
-// // Anything returned from this function will end up as props
-// // on the BookList container
-// function mapDispatchToProps(dispatch) {
-//   // Whenever selectBook is called, the result shoudl be passed
-//   // to all of our reducers
-//   return bindActionCreators({ selectBook: selectBook }, dispatch);
-// }
-//
-// // Promote BookList from a component to a container - it needs to know
-// // about this new dispatch method, selectBook. Make it available
-// // as a prop.
-// export default connect(mapStateToProps, mapDispatchToProps)(BookList);
